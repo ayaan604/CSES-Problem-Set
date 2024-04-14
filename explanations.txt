@@ -1,7 +1,7 @@
 1. Removal Game : 
 I struggled with this problem for a couple of days before getting the KEY insight. Player 1 and player 2 will always be working with unique combination of indices! Hence implying that for dp to work, I need to consider 2 steps ahead in each move instead of 1, purely from the perspective of player 1. Subarray size 2 and 3 are the base cases. If subarray size == 2, then only consider the max value. If size == 3, then choose one of the either corner values and ADD it to the minimum of the remaining (because player 2 will take the maximum from the remaining)
 
-2. L2939:
+2. L2939 (Maximum Xor Product):
 The key to understanding this problem is, that at the end of the day its just multiplication of two numbers. And since we want the maximum product, its in our interest to maximise the value of (a * x) and (b * x). However, we can't win it all, at some point, 'a' would have to reduce to make way for 'b' to increase or vice-versa. More on this in a while.
 Basic idea is that we iterate from 0 to n-1, and check every bit of a and b.
 - if they both have set bit, then we will do nothing
@@ -12,7 +12,16 @@ We will add the indexes with such cases in an array. Then in the case where a > 
 But how do we make the two numbers as close as possible? 
 Proof by contradiction. Suppose a > b, if we add the highest index set bit to 'a', then we are only increasing their gap because the sum of all other bits would be less than the highest bit. So we will iterate the indexes array and add the highest bit to the one that is smaller between a and b. Once we have final values of a and b, we just multiply it.
 
-3. L42:
+3. L42 (Trapping Rain Water):
 The initial understanding is that we need minimum 3 blocks to trap water, and it should not be non-decreasing,non-increasing. So it provides one conclusion, that to trap water we need the tallest blocks at either ends. And if a taller block is encountered further, then it takes place of the right block.
 What idea should this fetch in our mind? Quite obviously, a stack! A stack that will be monotonic, and after the entire iteration is done, would consist of blocks that keep decreasing in height from left to right. So we basically loop through the array, then on the index where we are at we will go through the stack and keep removing blocks that are shorter in height than our current block. If the stack gets empty, then that means we have encountered a block that is taller than all the blocks that came before it. In this case, we will just calculate the trapped water between it and the last removed block of the stack (height of smaller block * distance between them - area of blocks in the middle).
 At the end of the loop when we have the final blocks in our stack, we will then iterate through the stack and remove the blocks one by one, adding the trapped water between the adjacent ones to the final result.
+
+4. L4 (MEDIAN OF TWO SORTED ARRAYS):
+Median of two sorted arrays. So bloody easy when you try to solve it in linear time, and absolutely brain wrecking if you have to solve it in logarithmic time.
+My solution is unlike I have observed on forums, atleast with how many solutions I saw online. It solves this problem in O(log(n+m)), which is not the most ideal, but a unique solution.
+My main insight was to realize that if we take one array, and do a binary search on it, we ought to find the smallest index in that array for which the corresponding (MEDIAN_POS-i) idx value in the other array is less than or equal to the current idx value.
+What I mean is, we first find the median position of the combined array. For simplicity, we will have the same value for odd and even initially, and a special handling for even case would be done later. 
+After finding the median position, we binary search through array 1, and for any index we stumble upon we try to find its corresponding index in the other array.
+For example if median position is 10, and we are on index 7 of first array, then we will search for the (10-7) = 3rd index of the arr2. Then we will check if the value on that index of arr2 is <= value of index 7 of arr1. Using this we can confirm that this might be a 'potential' median position. How can we improve on this? By searching even lower. Because the smallest the index in arr1 for which this holds true, the more likely it is the actual median.
+Then we repeat the same by swapping the role of arr1 and arr2. And we compare the results from both iterations. Minimum value wins.
