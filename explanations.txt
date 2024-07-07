@@ -25,3 +25,11 @@ What I mean is, we first find the median position of the combined array. For sim
 After finding the median position, we binary search through array 1, and for any index we stumble upon we try to find its corresponding index in the other array.
 For example if median position is 10, and we are on index 7 of first array, then we will search for the (10-7) = 3rd index of the arr2. Then we will check if the value on that index of arr2 is <= value of index 7 of arr1. Using this we can confirm that this might be a 'potential' median position. How can we improve on this? By searching even lower. Because the smallest the index in arr1 for which this holds true, the more likely it is the actual median.
 Then we repeat the same by swapping the role of arr1 and arr2. And we compare the results from both iterations. Minimum value wins.
+
+5. L10 (Regular Expression Matching):
+We have two cases, one where i+1 index HAS "*", or quantifier, and another where it does not. My code is based on those two scenarios.
+And further subdivision is done based on whether the i'th index has a literal character or wildcard character. The idea is that if i / (i+1 ?) pattern matches the i'th index of subject string, then we need to recursively move ahead, and if it does not match then return false.
+-> Example : If s = 'aaa' and p = 'a*aa', then 'a*' is matched against 'a', proceeded by 'a*' matching 'aa' and then 'aaa' too. However, if the string index is exhausted while the pattern index is still remaining, then the whole string pattern matching fails. So in this case, it will recursively return false for 'a*' and 'aaa', leading to change in string and pattern index both. This will be more clear by observing the code and understanding few rules
+- String and pattern both should match from start to end. Incomplete pattern matching is not allowed
+- (char)* implies that even 0 instance of that character is possible. So in recursion we need to increase the pattern index by 1 without increasing string index
+- even after string index exhausts and pattern index remains, we need to check if each of the remaining pattern has the "*" quantifier. In that case we will return true if all the subsequent patterns are with quantifiers.
